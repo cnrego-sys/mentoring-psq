@@ -32,72 +32,73 @@
     .selected-neutral { border-color: #0284c7; background-color: #f0f9ff; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen pb-20">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen pb-20 text-base">
 
   <!-- ENCABEZADO -->
   <header class="bg-serenity-900 text-white sticky top-0 z-30 shadow-md">
-    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="max-w-3xl mx-auto px-4 py-3.5 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center font-bold text-slate-900 text-xl">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center font-bold text-slate-900 text-2xl shadow-sm">
           🌱
         </div>
         <div>
-          <h1 id="header-title" class="text-base font-bold text-white">Bitácora Docente (PSQ)</h1>
+          <h1 id="header-title" class="text-lg font-bold text-white leading-tight">Bitácora Docente (PSQ)</h1>
           <p id="header-subtitle" class="text-xs text-serenity-100">Autoevaluación Diaria & Acompañamiento</p>
         </div>
       </div>
-      <button onclick="openConfigModal()" title="Configuración" class="p-1.5 text-serenity-100 hover:text-white">
+      <button onclick="openConfigModal()" title="Configuración" class="p-2 text-serenity-100 hover:text-white text-xl">
         ⚙️
       </button>
     </div>
   </header>
 
-  <main class="max-w-3xl mx-auto px-4 pt-4">
+  <main class="max-w-3xl mx-auto px-4 pt-5">
 
-    <!-- NAV PROFESOR (Único visible por defecto) -->
-    <div id="nav-profesor" class="flex space-x-2 mb-4">
-      <button onclick="switchTab('form')" id="tab-btn-form" class="flex-1 py-2 text-xs font-bold rounded-xl bg-serenity-700 text-white">
+    <!-- NAV PROFESOR -->
+    <div id="nav-profesor" class="flex space-x-2 mb-5">
+      <button onclick="switchTab('form')" id="tab-btn-form" class="flex-1 py-2.5 text-sm font-bold rounded-xl bg-serenity-700 text-white shadow-sm">
         📝 Autoevaluación
       </button>
-      <button onclick="switchTab('guide')" id="tab-btn-guide" class="flex-1 py-2 text-xs font-bold rounded-xl bg-white text-slate-600 border border-slate-200">
+      <button onclick="switchTab('guide')" id="tab-btn-guide" class="flex-1 py-2.5 text-sm font-bold rounded-xl bg-white text-slate-600 border border-slate-200">
         💡 Guía SOS
       </button>
-      <button onclick="switchTab('prof-history')" id="tab-btn-prof-history" class="flex-1 py-2 text-xs font-bold rounded-xl bg-white text-slate-600 border border-slate-200">
+      <button onclick="switchTab('prof-history')" id="tab-btn-prof-history" class="flex-1 py-2.5 text-sm font-bold rounded-xl bg-white text-slate-600 border border-slate-200">
         📊 Mi Progreso
       </button>
     </div>
 
     <!-- ================= VISTA PROFESOR: AUTOEVALUACIÓN ================= -->
-    <div id="view-form" class="space-y-4">
+    <div id="view-form" class="space-y-5">
       <section class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-        <div class="flex justify-between items-center mb-2">
-          <span class="text-xs font-bold text-slate-500 uppercase">Docente: <strong class="text-serenity-900">PSQ</strong></span>
-          <span id="autoDate" class="text-xs font-semibold text-slate-600"></span>
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-sm font-bold text-slate-600 uppercase">Docente: <strong class="text-serenity-900 text-base">PSQ</strong></span>
+          <span id="autoDate" class="text-sm font-semibold text-slate-600"></span>
         </div>
 
-        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-800">🎯 Reto Semanal sugerido por tu Mentor:</span>
-          <p id="weeklyTargetDisplay" class="text-xs font-semibold text-emerald-900 mt-0.5">Cargando reto...</p>
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5">
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 block mb-1">🎯 Reto Semanal sugerido por tu Mentor:</span>
+          <p id="weeklyTargetDisplay" class="text-sm font-semibold text-emerald-950 leading-relaxed">Cargando reto...</p>
         </div>
       </section>
 
-      <form id="evalForm" onsubmit="submitEvaluation(event)" class="space-y-4">
+      <form id="evalForm" onsubmit="submitEvaluation(event)" class="space-y-5">
+        
         <!-- 1. Ritmo -->
         <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-          <span class="text-xs font-bold text-serenity-900 uppercase">1. Ritmo y Tiempos</span>
-          <p class="text-xs text-slate-600 mb-2">¿Cómo fluyeron los tiempos de explicación y transiciones?</p>
-          <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="selectCard('ritmo', 'green', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-emerald-700 block">🟢 Fluido</span>
-              <span class="text-[10px] text-slate-500">Concisos y ágiles.</span>
+          <span class="text-sm font-bold text-serenity-900 uppercase tracking-wide">1. Ritmo y Tiempos de Clase</span>
+          <p class="text-xs text-slate-600 my-1.5">¿Cómo fluyeron los tiempos de explicación y las transiciones?</p>
+          <div class="grid grid-cols-3 gap-2.5 mt-2">
+            <button type="button" onclick="selectCard('ritmo', 'green', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-emerald-700 block">🟢 Fluido</span>
+              <span class="text-xs text-slate-500">Concisos y ágiles.</span>
             </button>
-            <button type="button" onclick="selectCard('ritmo', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-amber-700 block">🟡 Irregular</span>
-              <span class="text-[10px] text-slate-500">Tiempos muertos.</span>
+            <button type="button" onclick="selectCard('ritmo', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-amber-700 block">🟡 Irregular</span>
+              <span class="text-xs text-slate-500">Tiempos muertos.</span>
             </button>
-            <button type="button" onclick="selectCard('ritmo', 'red', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-rose-700 block">🔴 Parado</span>
-              <span class="text-[10px] text-slate-500">Teoría en exceso.</span>
+            <button type="button" onclick="selectCard('ritmo', 'red', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-rose-700 block">🔴 Parado</span>
+              <span class="text-xs text-slate-500">Teoría en exceso.</span>
             </button>
           </div>
           <input type="hidden" id="val_ritmo" required>
@@ -105,20 +106,20 @@
 
         <!-- 2. Calma -->
         <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-          <span class="text-xs font-bold text-serenity-900 uppercase">2. Tono de Voz y Calma</span>
-          <p class="text-xs text-slate-600 mb-2">¿Cómo reaccionaste ante el ruido o desatención?</p>
-          <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="selectCard('emocion', 'green', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-emerald-700 block">🟢 Serenidad</span>
-              <span class="text-[10px] text-slate-500">Pausas y voz baja.</span>
+          <span class="text-sm font-bold text-serenity-900 uppercase tracking-wide">2. Tono de Voz y Calma</span>
+          <p class="text-xs text-slate-600 my-1.5">¿Cómo reaccionaste ante el ruido o desatención?</p>
+          <div class="grid grid-cols-3 gap-2.5 mt-2">
+            <button type="button" onclick="selectCard('emocion', 'green', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-emerald-700 block">🟢 Serenidad</span>
+              <span class="text-xs text-slate-500">Pausas y voz baja.</span>
             </button>
-            <button type="button" onclick="selectCard('emocion', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-amber-700 block">🟡 Tenso</span>
-              <span class="text-[10px] text-slate-500">Avisos con frustración.</span>
+            <button type="button" onclick="selectCard('emocion', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-amber-700 block">🟡 Tenso</span>
+              <span class="text-xs text-slate-500">Avisos con tensión.</span>
             </button>
-            <button type="button" onclick="selectCard('emocion', 'red', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-rose-700 block">🔴 Escalada</span>
-              <span class="text-[10px] text-slate-500">Elevé el tono.</span>
+            <button type="button" onclick="selectCard('emocion', 'red', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-rose-700 block">🔴 Escalada</span>
+              <span class="text-xs text-slate-500">Elevé el tono.</span>
             </button>
           </div>
           <input type="hidden" id="val_emocion" required>
@@ -126,20 +127,20 @@
 
         <!-- 3. Desescalada -->
         <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-          <span class="text-xs font-bold text-serenity-900 uppercase">3. Desescalada en Público</span>
-          <p class="text-xs text-slate-600 mb-2">¿Evitaste discutir en público y diste opciones claras?</p>
-          <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="selectCard('limites', 'green', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-emerald-700 block">🟢 Privado / Opciones</span>
-              <span class="text-[10px] text-slate-500">Proximidad física.</span>
+          <span class="text-sm font-bold text-serenity-900 uppercase tracking-wide">3. Desescalada en Público</span>
+          <p class="text-xs text-slate-600 my-1.5">¿Evitaste discutir en público y diste opciones claras?</p>
+          <div class="grid grid-cols-3 gap-2.5 mt-2">
+            <button type="button" onclick="selectCard('limites', 'green', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-emerald-700 block">🟢 Opciones</span>
+              <span class="text-xs text-slate-500">Proximidad física.</span>
             </button>
-            <button type="button" onclick="selectCard('limites', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-amber-700 block">🟡 Aviso Público</span>
-              <span class="text-[10px] text-slate-500">Corregí desde lejos.</span>
+            <button type="button" onclick="selectCard('limites', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-amber-700 block">🟡 En Público</span>
+              <span class="text-xs text-slate-500">Corregí desde lejos.</span>
             </button>
-            <button type="button" onclick="selectCard('limites', 'red', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-rose-700 block">🔴 Pulso</span>
-              <span class="text-[10px] text-slate-500">Discusión o ironía.</span>
+            <button type="button" onclick="selectCard('limites', 'red', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-rose-700 block">🔴 Pulso</span>
+              <span class="text-xs text-slate-500">Discusión o ironía.</span>
             </button>
           </div>
           <input type="hidden" id="val_limites" required>
@@ -147,20 +148,20 @@
 
         <!-- 4. DESC -->
         <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-          <span class="text-xs font-bold text-serenity-900 uppercase">4. Conversación Individual (Post-clase)</span>
-          <p class="text-xs text-slate-600 mb-2">Si hablaste con un alumno al terminar...</p>
-          <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="selectCard('desc', 'neutral', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-slate-600 block">⚪ Sin necesidad</span>
-              <span class="text-[10px] text-slate-400">No hizo falta.</span>
+          <span class="text-sm font-bold text-serenity-900 uppercase tracking-wide">4. Conversación Individual (Post-clase)</span>
+          <p class="text-xs text-slate-600 my-1.5">Si hablaste con un alumno al terminar...</p>
+          <div class="grid grid-cols-3 gap-2.5 mt-2">
+            <button type="button" onclick="selectCard('desc', 'neutral', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-slate-600 block">⚪ Sin falta</span>
+              <span class="text-xs text-slate-400">No hizo falta.</span>
             </button>
-            <button type="button" onclick="selectCard('desc', 'green', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-emerald-700 block">🟢 Método DESC</span>
-              <span class="text-[10px] text-slate-500">Hechos sin etiquetas.</span>
+            <button type="button" onclick="selectCard('desc', 'green', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-emerald-700 block">🟢 Método DESC</span>
+              <span class="text-xs text-slate-500">Hechos sin etiquetas.</span>
             </button>
-            <button type="button" onclick="selectCard('desc', 'red', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-rose-700 block">🔴 Reproche</span>
-              <span class="text-[10px] text-slate-500">Bronca en caliente.</span>
+            <button type="button" onclick="selectCard('desc', 'red', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-rose-700 block">🔴 Bronca</span>
+              <span class="text-xs text-slate-500">Amonestación dura.</span>
             </button>
           </div>
           <input type="hidden" id="val_desc" required>
@@ -168,20 +169,20 @@
 
         <!-- 5. Coherencia -->
         <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-          <span class="text-xs font-bold text-serenity-900 uppercase">5. Coherencia e Imparcialidad</span>
-          <p class="text-xs text-slate-600 mb-2">¿Aplicaste las mismas normas a todos por igual?</p>
-          <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="selectCard('coherencia', 'green', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-emerald-700 block">🟢 Equitativo</span>
-              <span class="text-[10px] text-slate-500">Sin favoritismos.</span>
+          <span class="text-sm font-bold text-serenity-900 uppercase tracking-wide">5. Coherencia e Imparcialidad</span>
+          <p class="text-xs text-slate-600 my-1.5">¿Aplicaste las mismas normas a todos por igual?</p>
+          <div class="grid grid-cols-3 gap-2.5 mt-2">
+            <button type="button" onclick="selectCard('coherencia', 'green', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-emerald-700 block">🟢 Equitativo</span>
+              <span class="text-xs text-slate-500">Sin favoritismos.</span>
             </button>
-            <button type="button" onclick="selectCard('coherencia', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-amber-700 block">🟡 Permisivo</span>
-              <span class="text-[10px] text-slate-500">Acumulé malestar.</span>
+            <button type="button" onclick="selectCard('coherencia', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-amber-700 block">🟡 Permisivo</span>
+              <span class="text-xs text-slate-500">Acumulé malestar.</span>
             </button>
-            <button type="button" onclick="selectCard('coherencia', 'red', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-rose-700 block">🔴 Variable</span>
-              <span class="text-[10px] text-slate-500">Según mi cansancio.</span>
+            <button type="button" onclick="selectCard('coherencia', 'red', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-rose-700 block">🔴 Variable</span>
+              <span class="text-xs text-slate-500">Según mi cansancio.</span>
             </button>
           </div>
           <input type="hidden" id="val_coherencia" required>
@@ -189,20 +190,20 @@
 
         <!-- 6. Aprendizaje -->
         <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-          <span class="text-xs font-bold text-serenity-900 uppercase">6. Calidad del Aprendizaje</span>
-          <p class="text-xs text-slate-600 mb-2">¿Cómo valoras el nivel de atención y seguimiento?</p>
-          <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="selectCard('aprendizaje', 'green', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-emerald-700 block">🟢 Alto</span>
-              <span class="text-[10px] text-slate-500">Autónomos y atentos.</span>
+          <span class="text-sm font-bold text-serenity-900 uppercase tracking-wide">6. Calidad del Aprendizaje</span>
+          <p class="text-xs text-slate-600 my-1.5">¿Cómo valoras el nivel de atención y seguimiento?</p>
+          <div class="grid grid-cols-3 gap-2.5 mt-2">
+            <button type="button" onclick="selectCard('aprendizaje', 'green', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-emerald-700 block">🟢 Alto</span>
+              <span class="text-xs text-slate-500">Autónomos y atentos.</span>
             </button>
-            <button type="button" onclick="selectCard('aprendizaje', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-amber-700 block">🟡 Medio</span>
-              <span class="text-[10px] text-slate-500">Dudas rezagadas.</span>
+            <button type="button" onclick="selectCard('aprendizaje', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-amber-700 block">🟡 Medio</span>
+              <span class="text-xs text-slate-500">Dudas rezagadas.</span>
             </button>
-            <button type="button" onclick="selectCard('aprendizaje', 'red', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
-              <span class="text-xs font-bold text-rose-700 block">🔴 Bajo</span>
-              <span class="text-[10px] text-slate-500">Alta dispersión.</span>
+            <button type="button" onclick="selectCard('aprendizaje', 'red', this)" class="option-card border-slate-200 rounded-xl p-3 text-left bg-slate-50">
+              <span class="text-sm font-bold text-rose-700 block">🔴 Bajo</span>
+              <span class="text-xs text-slate-500">Alta dispersión.</span>
             </button>
           </div>
           <input type="hidden" id="val_aprendizaje" required>
@@ -210,8 +211,8 @@
 
         <!-- 7. Punto de Lucha -->
         <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-          <span class="text-xs font-bold text-serenity-900 uppercase">7. Principal Punto de Fricción</span>
-          <select id="val_lucha" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs font-semibold text-slate-700 mt-2">
+          <span class="text-sm font-bold text-serenity-900 uppercase tracking-wide">7. Principal Punto de Fricción</span>
+          <select id="val_lucha" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-semibold text-slate-700 mt-2">
             <option value="Ninguno destacado">🟢 Día tranquilo sin fricciones</option>
             <option value="Murmullos / Ruido">🔊 Murmullos y ruido constante</option>
             <option value="Distracciones con objetos">✏️ Distracciones con objetos/notas</option>
@@ -223,29 +224,81 @@
 
         <!-- 8. Reflexión -->
         <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-          <span class="text-xs font-bold text-serenity-900 uppercase">8. Reflexión Libre / Nota para Tutoría</span>
-          <textarea id="val_nota" rows="2" placeholder="Comentario o duda para revisar en la próxima sesión..." class="w-full text-xs p-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white mt-2"></textarea>
+          <span class="text-sm font-bold text-serenity-900 uppercase tracking-wide">8. Reflexión Libre / Nota para Tutoría</span>
+          <textarea id="val_nota" rows="3" placeholder="Comentario o duda para revisar en la próxima sesión..." class="w-full text-sm p-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white mt-2 leading-relaxed"></textarea>
         </div>
 
-        <button type="submit" id="btnSubmit" class="w-full bg-serenity-700 hover:bg-serenity-900 text-white font-bold py-3.5 rounded-xl shadow-md text-sm">
+        <button type="submit" id="btnSubmit" class="w-full bg-serenity-700 hover:bg-serenity-900 text-white font-bold py-4 rounded-xl shadow-md text-base tracking-wide transition">
           Guardar Autoevaluación Diaria ✨
         </button>
       </form>
     </div>
 
-    <!-- ================= VISTA GUÍA SOS ================= -->
+    <!-- ================= VISTA GUÍA SOS (AMPLIADA Y FÁCIL DE LEER) ================= -->
     <div id="view-guide" class="hidden space-y-4">
-      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3 text-xs">
-        <h2 class="font-bold text-serenity-900 border-b pb-1 uppercase">📘 Chuleta Pedagógica de Aula</h2>
-        <div class="bg-amber-50 p-2.5 rounded-xl"><strong>⏱️ Regla 10 segundos:</strong> Haz una pausa, respira y baja el volumen.</div>
-        <div class="bg-emerald-50 p-2.5 rounded-xl"><strong>🗣️ Fórmula DESC:</strong> Describir hecho $\rightarrow$ Expresar impacto $\rightarrow$ Sugerir cambio $\rightarrow$ Consecuencia positiva.</div>
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-5 text-sm">
+        
+        <div class="border-b pb-2">
+          <h2 class="text-base font-bold text-serenity-900 uppercase tracking-wide">📘 Chuleta Pedagógica de Aula</h2>
+          <p class="text-xs text-slate-500">Recordatorio rápido para momentos de tensión en clase</p>
+        </div>
+
+        <!-- Tarjetas principales -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl">
+            <p class="font-bold text-amber-900 text-sm mb-1">⏱️ Regla de los 10 segundos</p>
+            <p class="text-amber-950 text-xs leading-relaxed">Haz una pausa, respira y baja el volumen. Elevar la voz solo incrementa el nivel de ruido general del aula.</p>
+          </div>
+          <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+            <p class="font-bold text-emerald-900 text-sm mb-1">🗣️ Fórmula DESC (Charla a solas)</p>
+            <p class="text-emerald-950 text-xs leading-relaxed">
+              <strong>Describir hecho</strong> → <strong>Expresar impacto</strong> → <strong>Sugerir cambio</strong> → <strong>Consecuencia positiva</strong>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Escenarios comunes -->
+        <div class="space-y-3 pt-2">
+          <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider">¿Qué decir ante los 4 problemas comunes?</h3>
+
+          <div class="border-l-4 border-emerald-500 pl-3 py-1 bg-slate-50/50 p-2.5 rounded-r-xl">
+            <p class="font-bold text-slate-900 text-xs">1. Murmullos o charlas mientras explicas:</p>
+            <p class="italic text-slate-600 text-xs mt-1">"Pausa en silencio de 3 a 5 segundos mirando fijamente al grupo. Si persiste: 'Para poder avanzar necesito silencio. Gracias.'"</p>
+          </div>
+
+          <div class="border-l-4 border-amber-500 pl-3 py-1 bg-slate-50/50 p-2.5 rounded-r-xl">
+            <p class="font-bold text-slate-900 text-xs">2. Distracciones con objetos o notas:</p>
+            <p class="italic text-slate-600 text-xs mt-1">"(En voz baja acercándote a su mesa): 'Veo el objeto sobre la mesa. Opción A: lo guardas en la mochila; Opción B: lo dejas en mi mesa y lo recoges al final. Tú decides.'"</p>
+          </div>
+
+          <div class="border-l-4 border-cyan-500 pl-3 py-1 bg-slate-50/50 p-2.5 rounded-r-xl">
+            <p class="font-bold text-slate-900 text-xs">3. Negativa a trabajar ("No tengo ganas"):</p>
+            <p class="italic text-slate-600 text-xs mt-1">"(Agachado a su altura): 'Comprendo que cueste arrancar hoy, pero la tarea hay que completarla. Haz solo los 2 primeros ejercicios y vuelvo en 5 minutos a ver cómo vas.'"</p>
+          </div>
+
+          <div class="border-l-4 border-rose-500 pl-3 py-1 bg-slate-50/50 p-2.5 rounded-r-xl">
+            <p class="font-bold text-slate-900 text-xs">4. Desafío o falta de respeto en público:</p>
+            <p class="italic text-slate-600 text-xs mt-1">"Desarmar la audiencia: 'Veo que estás molesto, pero no voy a discutir esto delante de la clase. Continúa con la lectura y lo hablamos a solas al terminar.'"</p>
+          </div>
+        </div>
+
+        <!-- Evitar -->
+        <div class="bg-rose-50 border border-rose-200 p-3.5 rounded-xl text-rose-950">
+          <p class="font-bold text-rose-900 text-xs mb-1">🚫 3 Actitudes a Evitar Siempre:</p>
+          <ul class="list-disc pl-4 space-y-1 text-xs">
+            <li><strong>Sarcasmo e ironía:</strong> Destruyen la confianza con el alumnado de inmediato.</li>
+            <li><strong>Amenazas colectivas:</strong> Sancionar a todo el grupo genera injusticia.</li>
+            <li><strong>Tomarlo como personal:</strong> Es búsqueda de límites, no un ataque a tu persona.</li>
+          </ul>
+        </div>
+
       </div>
     </div>
 
     <!-- ================= VISTA PROGRESO PROFESOR ================= -->
     <div id="view-prof-history" class="hidden space-y-4">
       <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
-        <h3 class="text-xs font-bold text-serenity-900 uppercase mb-3">Tus Últimas Evaluaciones</h3>
+        <h3 class="text-sm font-bold text-serenity-900 uppercase mb-3">Tus Últimas Evaluaciones</h3>
         <div id="profHistoryContainer" class="space-y-3 text-xs"></div>
       </div>
     </div>
@@ -258,7 +311,7 @@
             <h2 class="text-sm font-bold text-slate-900 uppercase">Panel del Mentor (Supervisión PSQ)</h2>
             <p class="text-xs text-slate-500">Revisión de informes y fijación de retos</p>
           </div>
-          <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1 rounded-lg text-xs font-bold">🖨️ Generar PDF / Imprimir</button>
+          <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold">🖨️ Generar PDF / Imprimir</button>
         </div>
 
         <!-- Reto Semanal -->
@@ -270,7 +323,7 @@
           </div>
         </div>
 
-        <!-- Filtro entre Fechas para Informe -->
+        <!-- Filtro entre Fechas -->
         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
           <span class="text-xs font-bold text-slate-700 block">📅 Filtrar Informe Cara a Cara (Entre Fechas):</span>
           <div class="grid grid-cols-2 gap-2">
@@ -327,7 +380,7 @@
 
     function switchTab(tab) {
       ['form', 'guide', 'prof-history'].forEach(t => {
-        document.getElementById('tab-btn-' + t).className = t === tab ? 'flex-1 py-2 text-xs font-bold rounded-xl bg-serenity-700 text-white' : 'flex-1 py-2 text-xs font-bold rounded-xl bg-white text-slate-600 border border-slate-200';
+        document.getElementById('tab-btn-' + t).className = t === tab ? 'flex-1 py-2.5 text-sm font-bold rounded-xl bg-serenity-700 text-white shadow-sm' : 'flex-1 py-2.5 text-sm font-bold rounded-xl bg-white text-slate-600 border border-slate-200';
         document.getElementById('view-' + t).classList.toggle('hidden', t !== tab);
       });
       if (tab === 'prof-history') renderProfHistory();
