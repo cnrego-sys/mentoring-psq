@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitácora Docente - PSQ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            serenity: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0284c7',
+              700: '#0369a1',
+              900: '#0c4a6e'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .option-card { transition: all 0.15s ease-in-out; border-width: 2px; }
+    .option-card:active { transform: scale(0.98); }
+    .selected-green { border-color: #16a34a; background-color: #f0fdf4; }
+    .selected-yellow { border-color: #d97706; background-color: #fffbeb; }
+    .selected-red { border-color: #dc2626; background-color: #fef2f2; }
+    .selected-neutral { border-color: #0284c7; background-color: #f0f9ff; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen pb-20">
+
+  <!-- ENCABEZADO -->
+  <header class="bg-serenity-900 text-white sticky top-0 z-30 shadow-md">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center font-bold text-slate-900 text-xl">
+          🌱
+        </div>
+        <div>
+          <h1 id="header-title" class="text-base font-bold text-white">Bitácora Docente (PSQ)</h1>
+          <p id="header-subtitle" class="text-xs text-serenity-100">Autoevaluación Diaria & Acompañamiento</p>
+        </div>
+      </div>
+      <button onclick="openConfigModal()" title="Configuración" class="p-1.5 text-serenity-100 hover:text-white">
+        ⚙️
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 pt-4">
+
+    <!-- NAV PROFESOR (Único visible por defecto) -->
+    <div id="nav-profesor" class="flex space-x-2 mb-4">
+      <button onclick="switchTab('form')" id="tab-btn-form" class="flex-1 py-2 text-xs font-bold rounded-xl bg-serenity-700 text-white">
+        📝 Autoevaluación
+      </button>
+      <button onclick="switchTab('guide')" id="tab-btn-guide" class="flex-1 py-2 text-xs font-bold rounded-xl bg-white text-slate-600 border border-slate-200">
+        💡 Guía SOS
+      </button>
+      <button onclick="switchTab('prof-history')" id="tab-btn-prof-history" class="flex-1 py-2 text-xs font-bold rounded-xl bg-white text-slate-600 border border-slate-200">
+        📊 Mi Progreso
+      </button>
+    </div>
+
+    <!-- ================= VISTA PROFESOR: AUTOEVALUACIÓN ================= -->
+    <div id="view-form" class="space-y-4">
+      <section class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-xs font-bold text-slate-500 uppercase">Docente: <strong class="text-serenity-900">PSQ</strong></span>
+          <span id="autoDate" class="text-xs font-semibold text-slate-600"></span>
+        </div>
+
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-800">🎯 Reto Semanal sugerido por tu Mentor:</span>
+          <p id="weeklyTargetDisplay" class="text-xs font-semibold text-emerald-900 mt-0.5">Cargando reto...</p>
+        </div>
+      </section>
+
+      <form id="evalForm" onsubmit="submitEvaluation(event)" class="space-y-4">
+        <!-- 1. Ritmo -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <span class="text-xs font-bold text-serenity-900 uppercase">1. Ritmo y Tiempos</span>
+          <p class="text-xs text-slate-600 mb-2">¿Cómo fluyeron los tiempos de explicación y transiciones?</p>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectCard('ritmo', 'green', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-emerald-700 block">🟢 Fluido</span>
+              <span class="text-[10px] text-slate-500">Concisos y ágiles.</span>
+            </button>
+            <button type="button" onclick="selectCard('ritmo', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-amber-700 block">🟡 Irregular</span>
+              <span class="text-[10px] text-slate-500">Tiempos muertos.</span>
+            </button>
+            <button type="button" onclick="selectCard('ritmo', 'red', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-rose-700 block">🔴 Parado</span>
+              <span class="text-[10px] text-slate-500">Teoría en exceso.</span>
+            </button>
+          </div>
+          <input type="hidden" id="val_ritmo" required>
+        </div>
+
+        <!-- 2. Calma -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <span class="text-xs font-bold text-serenity-900 uppercase">2. Tono de Voz y Calma</span>
+          <p class="text-xs text-slate-600 mb-2">¿Cómo reaccionaste ante el ruido o desatención?</p>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectCard('emocion', 'green', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-emerald-700 block">🟢 Serenidad</span>
+              <span class="text-[10px] text-slate-500">Pausas y voz baja.</span>
+            </button>
+            <button type="button" onclick="selectCard('emocion', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-amber-700 block">🟡 Tenso</span>
+              <span class="text-[10px] text-slate-500">Avisos con frustración.</span>
+            </button>
+            <button type="button" onclick="selectCard('emocion', 'red', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-rose-700 block">🔴 Escalada</span>
+              <span class="text-[10px] text-slate-500">Elevé el tono.</span>
+            </button>
+          </div>
+          <input type="hidden" id="val_emocion" required>
+        </div>
+
+        <!-- 3. Desescalada -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <span class="text-xs font-bold text-serenity-900 uppercase">3. Desescalada en Público</span>
+          <p class="text-xs text-slate-600 mb-2">¿Evitaste discutir en público y diste opciones claras?</p>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectCard('limites', 'green', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-emerald-700 block">🟢 Privado / Opciones</span>
+              <span class="text-[10px] text-slate-500">Proximidad física.</span>
+            </button>
+            <button type="button" onclick="selectCard('limites', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-amber-700 block">🟡 Aviso Público</span>
+              <span class="text-[10px] text-slate-500">Corregí desde lejos.</span>
+            </button>
+            <button type="button" onclick="selectCard('limites', 'red', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-rose-700 block">🔴 Pulso</span>
+              <span class="text-[10px] text-slate-500">Discusión o ironía.</span>
+            </button>
+          </div>
+          <input type="hidden" id="val_limites" required>
+        </div>
+
+        <!-- 4. DESC -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <span class="text-xs font-bold text-serenity-900 uppercase">4. Conversación Individual (Post-clase)</span>
+          <p class="text-xs text-slate-600 mb-2">Si hablaste con un alumno al terminar...</p>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectCard('desc', 'neutral', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-slate-600 block">⚪ Sin necesidad</span>
+              <span class="text-[10px] text-slate-400">No hizo falta.</span>
+            </button>
+            <button type="button" onclick="selectCard('desc', 'green', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-emerald-700 block">🟢 Método DESC</span>
+              <span class="text-[10px] text-slate-500">Hechos sin etiquetas.</span>
+            </button>
+            <button type="button" onclick="selectCard('desc', 'red', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-rose-700 block">🔴 Reproche</span>
+              <span class="text-[10px] text-slate-500">Bronca en caliente.</span>
+            </button>
+          </div>
+          <input type="hidden" id="val_desc" required>
+        </div>
+
+        <!-- 5. Coherencia -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <span class="text-xs font-bold text-serenity-900 uppercase">5. Coherencia e Imparcialidad</span>
+          <p class="text-xs text-slate-600 mb-2">¿Aplicaste las mismas normas a todos por igual?</p>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectCard('coherencia', 'green', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-emerald-700 block">🟢 Equitativo</span>
+              <span class="text-[10px] text-slate-500">Sin favoritismos.</span>
+            </button>
+            <button type="button" onclick="selectCard('coherencia', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-amber-700 block">🟡 Permisivo</span>
+              <span class="text-[10px] text-slate-500">Acumulé malestar.</span>
+            </button>
+            <button type="button" onclick="selectCard('coherencia', 'red', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-rose-700 block">🔴 Variable</span>
+              <span class="text-[10px] text-slate-500">Según mi cansancio.</span>
+            </button>
+          </div>
+          <input type="hidden" id="val_coherencia" required>
+        </div>
+
+        <!-- 6. Aprendizaje -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <span class="text-xs font-bold text-serenity-900 uppercase">6. Calidad del Aprendizaje</span>
+          <p class="text-xs text-slate-600 mb-2">¿Cómo valoras el nivel de atención y seguimiento?</p>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectCard('aprendizaje', 'green', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-emerald-700 block">🟢 Alto</span>
+              <span class="text-[10px] text-slate-500">Autónomos y atentos.</span>
+            </button>
+            <button type="button" onclick="selectCard('aprendizaje', 'yellow', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-amber-700 block">🟡 Medio</span>
+              <span class="text-[10px] text-slate-500">Dudas rezagadas.</span>
+            </button>
+            <button type="button" onclick="selectCard('aprendizaje', 'red', this)" class="option-card border-slate-200 rounded-xl p-2.5 text-left bg-slate-50">
+              <span class="text-xs font-bold text-rose-700 block">🔴 Bajo</span>
+              <span class="text-[10px] text-slate-500">Alta dispersión.</span>
+            </button>
+          </div>
+          <input type="hidden" id="val_aprendizaje" required>
+        </div>
+
+        <!-- 7. Punto de Lucha -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <span class="text-xs font-bold text-serenity-900 uppercase">7. Principal Punto de Fricción</span>
+          <select id="val_lucha" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs font-semibold text-slate-700 mt-2">
+            <option value="Ninguno destacado">🟢 Día tranquilo sin fricciones</option>
+            <option value="Murmullos / Ruido">🔊 Murmullos y ruido constante</option>
+            <option value="Distracciones con objetos">✏️ Distracciones con objetos/notas</option>
+            <option value="Apatía / No trabajan">😴 Apatía o no quieren trabajar</option>
+            <option value="Desafíos / Faltas de respeto">⚠️ Desafíos o mal tono</option>
+            <option value="Gestión del propio estrés">🤯 Estrés o cansancio acumulado</option>
+          </select>
+        </div>
+
+        <!-- 8. Reflexión -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <span class="text-xs font-bold text-serenity-900 uppercase">8. Reflexión Libre / Nota para Tutoría</span>
+          <textarea id="val_nota" rows="2" placeholder="Comentario o duda para revisar en la próxima sesión..." class="w-full text-xs p-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white mt-2"></textarea>
+        </div>
+
+        <button type="submit" id="btnSubmit" class="w-full bg-serenity-700 hover:bg-serenity-900 text-white font-bold py-3.5 rounded-xl shadow-md text-sm">
+          Guardar Autoevaluación Diaria ✨
+        </button>
+      </form>
+    </div>
+
+    <!-- ================= VISTA GUÍA SOS ================= -->
+    <div id="view-guide" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3 text-xs">
+        <h2 class="font-bold text-serenity-900 border-b pb-1 uppercase">📘 Chuleta Pedagógica de Aula</h2>
+        <div class="bg-amber-50 p-2.5 rounded-xl"><strong>⏱️ Regla 10 segundos:</strong> Haz una pausa, respira y baja el volumen.</div>
+        <div class="bg-emerald-50 p-2.5 rounded-xl"><strong>🗣️ Fórmula DESC:</strong> Describir hecho $\rightarrow$ Expresar impacto $\rightarrow$ Sugerir cambio $\rightarrow$ Consecuencia positiva.</div>
+      </div>
+    </div>
+
+    <!-- ================= VISTA PROGRESO PROFESOR ================= -->
+    <div id="view-prof-history" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+        <h3 class="text-xs font-bold text-serenity-900 uppercase mb-3">Tus Últimas Evaluaciones</h3>
+        <div id="profHistoryContainer" class="space-y-3 text-xs"></div>
+      </div>
+    </div>
+
+    <!-- ================= VISTA MENTOR (PRIVADA) ================= -->
+    <div id="view-mentor" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-4">
+        <div class="border-b pb-2 flex justify-between items-center">
+          <div>
+            <h2 class="text-sm font-bold text-slate-900 uppercase">Panel del Mentor (Supervisión PSQ)</h2>
+            <p class="text-xs text-slate-500">Revisión de informes y fijación de retos</p>
+          </div>
+          <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1 rounded-lg text-xs font-bold">🖨️ Generar PDF / Imprimir</button>
+        </div>
+
+        <!-- Reto Semanal -->
+        <div class="bg-serenity-50 border border-serenity-200 p-3 rounded-xl">
+          <label class="block text-xs font-bold text-serenity-900 mb-1">🎯 Reto Semanal para PSQ:</label>
+          <div class="flex space-x-2">
+            <input type="text" id="mentorTargetInput" placeholder="Escribe el objetivo semanal..." class="flex-1 text-xs p-2 rounded-lg border bg-white">
+            <button onclick="saveWeeklyTarget()" class="bg-serenity-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs">Guardar Reto</button>
+          </div>
+        </div>
+
+        <!-- Filtro entre Fechas para Informe -->
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
+          <span class="text-xs font-bold text-slate-700 block">📅 Filtrar Informe Cara a Cara (Entre Fechas):</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="text-[10px] text-slate-500">Desde:</label><input type="date" id="filterFrom" class="w-full text-xs p-1.5 border rounded-lg"></div>
+            <div><label class="text-[10px] text-slate-500">Hasta:</label><input type="date" id="filterTo" class="w-full text-xs p-1.5 border rounded-lg"></div>
+          </div>
+          <button onclick="renderMentorDashboard()" class="w-full bg-slate-700 text-white font-bold py-1.5 rounded-lg text-xs mt-1">Aplicar Filtro de Fechas</button>
+        </div>
+
+        <!-- Gráfico -->
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col items-center">
+          <span class="text-xs font-bold text-slate-700 mb-2">Puntos de Fricción Frecuentes</span>
+          <div class="w-48 h-48"><canvas id="strugglesChart"></canvas></div>
+        </div>
+
+        <!-- Histórico -->
+        <h3 class="text-xs font-bold text-slate-700 uppercase">Histórico de Evaluaciones de PSQ</h3>
+        <div id="mentorHistoryContainer" class="space-y-3 text-xs"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL CONFIGURACIÓN SHEETS -->
+  <div id="configModal" class="fixed inset-0 bg-slate-900/70 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl p-4 space-y-3 text-xs">
+      <h3 class="font-bold text-slate-900 border-b pb-2">Configuración de Conexión (Google Sheets)</h3>
+      <p class="text-slate-600">Pega aquí la URL de tu aplicación Web de Apps Script para sincronizar ambos dispositivos:</p>
+      <input type="url" id="sheetsUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full p-2 border rounded-lg">
+      <div class="flex space-x-2 pt-2">
+        <button onclick="saveConfig()" class="flex-1 bg-serenity-700 text-white font-bold py-2 rounded-lg">Guardar URL</button>
+        <button onclick="closeConfigModal()" class="px-3 bg-slate-200 text-slate-700 font-bold py-2 rounded-lg">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let isMentorMode = new URLSearchParams(window.location.search).get('modo') === 'mentor';
+    let strugglesChartInstance = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('autoDate').innerText = new Date().toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+      
+      if (isMentorMode) {
+        document.getElementById('nav-profesor').classList.add('hidden');
+        document.getElementById('view-form').classList.add('hidden');
+        document.getElementById('view-mentor').classList.remove('hidden');
+        document.getElementById('header-title').innerText = "Panel del Mentor (Supervisión PSQ)";
+        renderMentorDashboard();
+      } else {
+        loadWeeklyTarget();
+      }
+    });
+
+    function switchTab(tab) {
+      ['form', 'guide', 'prof-history'].forEach(t => {
+        document.getElementById('tab-btn-' + t).className = t === tab ? 'flex-1 py-2 text-xs font-bold rounded-xl bg-serenity-700 text-white' : 'flex-1 py-2 text-xs font-bold rounded-xl bg-white text-slate-600 border border-slate-200';
+        document.getElementById('view-' + t).classList.toggle('hidden', t !== tab);
+      });
+      if (tab === 'prof-history') renderProfHistory();
+    }
+
+    function selectCard(cat, val, el) {
+      document.getElementById('val_' + cat).value = val;
+      el.parentElement.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected-green', 'selected-yellow', 'selected-red', 'selected-neutral'));
+      if (val === 'green') el.classList.add('selected-green');
+      else if (val === 'yellow') el.classList.add('selected-yellow');
+      else if (val === 'red') el.classList.add('selected-red');
+      else if (val === 'neutral') el.classList.add('selected-neutral');
+    }
+
+    function loadWeeklyTarget() {
+      const target = localStorage.getItem('psq_target') || 'Cuidar las pausas de silencio y la proximidad física.';
+      document.getElementById('weeklyTargetDisplay').innerText = target;
+    }
+
+    async function submitEvaluation(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmit');
+      btn.disabled = true;
+
+      const record = {
+        id: Date.now(),
+        date: new Date().toLocaleDateString('es-ES'),
+        isoDate: new Date().toISOString().split('T')[0],
+        ritmo: document.getElementById('val_ritmo').value,
+        emocion: document.getElementById('val_emocion').value,
+        limites: document.getElementById('val_limites').value,
+        desc: document.getElementById('val_desc').value,
+        coherencia: document.getElementById('val_coherencia').value,
+        aprendizaje: document.getElementById('val_aprendizaje').value,
+        lucha: document.getElementById('val_lucha').value,
+        nota: document.getElementById('val_nota').value.trim()
+      };
+
+      let history = JSON.parse(localStorage.getItem('psq_evals') || '[]');
+      history.unshift(record);
+      localStorage.setItem('psq_evals', JSON.stringify(history));
+
+      const sheetsUrl = localStorage.getItem('psq_sheets_url');
+      if (sheetsUrl) {
+        try {
+          await fetch(sheetsUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(record) });
+        } catch(err) { console.warn("Error enviando a Sheets", err); }
+      }
+
+      alert("¡Autoevaluación guardada correctamente!");
+      btn.disabled = false;
+      location.reload();
+    }
+
+    function renderProfHistory() {
+      const data = JSON.parse(localStorage.getItem('psq_evals') || '[]');
+      const container = document.getElementById('profHistoryContainer');
+      container.innerHTML = data.length === 0 ? '<p class="text-slate-400 text-center py-4">No hay registros guardados.</p>' : data.map(item => createCard(item)).join('');
+    }
+
+    function renderMentorDashboard() {
+      document.getElementById('mentorTargetInput').value = localStorage.getItem('psq_target') || '';
+      let data = JSON.parse(localStorage.getItem('psq_evals') || '[]');
+
+      const from = document.getElementById('filterFrom').value;
+      const to = document.getElementById('filterTo').value;
+
+      if (from && to) {
+        data = data.filter(d => d.isoDate >= from && d.isoDate <= to);
+      }
+
+      const container = document.getElementById('mentorHistoryContainer');
+      container.innerHTML = data.length === 0 ? '<p class="text-slate-400 text-center py-4">Sin registros en este periodo.</p>' : data.map(item => createCard(item)).join('');
+      updateChart(data);
+    }
+
+    function saveWeeklyTarget() {
+      const val = document.getElementById('mentorTargetInput').value.trim();
+      localStorage.setItem('psq_target', val);
+      alert("Reto semanal guardado para PSQ.");
+    }
+
+    function createCard(item) {
+      const dot = v => v === 'green' ? '🟢' : (v === 'yellow' ? '🟡' : (v === 'red' ? '🔴' : '⚪'));
+      return `
+        <div class="bg-slate-50 border p-3 rounded-xl space-y-1">
+          <div class="flex justify-between font-bold text-slate-800 border-b pb-1">
+            <span>📅 ${item.date}</span>
+            <span class="text-[10px] bg-slate-200 px-2 py-0.5 rounded">${item.lucha}</span>
+          </div>
+          <div class="grid grid-cols-6 gap-1 text-center text-[9px] bg-white p-1 rounded border">
+            <div>Ritmo<br>${dot(item.ritmo)}</div>
+            <div>Calma<br>${dot(item.emocion)}</div>
+            <div>Límites<br>${dot(item.limites)}</div>
+            <div>DESC<br>${dot(item.desc)}</div>
+            <div>Firmeza<br>${dot(item.coherencia)}</div>
+            <div>Aprende<br>${dot(item.aprendizaje)}</div>
+          </div>
+          ${item.nota ? `<p class="italic text-slate-600 text-[11px] bg-white p-1.5 rounded border">"${item.nota}"</p>` : ''}
+        </div>`;
+    }
+
+    function updateChart(data) {
+      const ctx = document.getElementById('strugglesChart').getContext('2d');
+      const counts = {};
+      data.forEach(d => counts[d.lucha] = (counts[d.lucha] || 0) + 1);
+      if (strugglesChartInstance) strugglesChartInstance.destroy();
+      strugglesChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: { labels: Object.keys(counts), datasets: [{ data: Object.values(counts), backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6', '#64748b'] }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+    }
+
+    function openConfigModal() { document.getElementById('sheetsUrlInput').value = localStorage.getItem('psq_sheets_url') || ''; document.getElementById('configModal').classList.remove('hidden'); }
+    function closeConfigModal() { document.getElementById('configModal').classList.add('hidden'); }
+    function saveConfig() { localStorage.setItem('psq_sheets_url', document.getElementById('sheetsUrlInput').value.trim()); closeConfigModal(); alert("Conexión guardada."); }
+  </script>
+</body>
+</html>
