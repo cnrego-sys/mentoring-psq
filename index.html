@@ -24,12 +24,17 @@
     }
   </script>
   <style>
-    .option-card { transition: all 0.15s ease-in-out; border-width: 2px; }
-    .option-card:active { transform: scale(0.98); }
-    .selected-green { border-color: #16a34a; background-color: #f0fdf4; }
-    .selected-yellow { border-color: #d97706; background-color: #fffbeb; }
-    .selected-red { border-color: #dc2626; background-color: #fef2f2; }
-    .selected-neutral { border-color: #0284c7; background-color: #f0f9ff; }
+    .option-card { 
+      transition: all 0.15s ease-in-out; 
+      border-width: 2px; 
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .option-card:active { transform: scale(0.97); }
+    .selected-green { border-color: #16a34a !important; background-color: #f0fdf4 !important; box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.2); }
+    .selected-yellow { border-color: #d97706 !important; background-color: #fffbeb !important; box-shadow: 0 4px 6px -1px rgba(217, 119, 6, 0.2); }
+    .selected-red { border-color: #dc2626 !important; background-color: #fef2f2 !important; box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.2); }
+    .selected-neutral { border-color: #0284c7 !important; background-color: #f0f9ff !important; box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.2); }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen pb-20 text-base">
@@ -72,7 +77,10 @@
       <section class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
         <div class="flex justify-between items-center mb-3">
           <span class="text-sm font-bold text-slate-600 uppercase">Docente: <strong class="text-serenity-900 text-base">PSQ</strong></span>
-          <span id="autoDate" class="text-sm font-semibold text-slate-600"></span>
+          <div class="flex items-center space-x-1">
+            <label for="evalDate" class="text-xs text-slate-500 font-semibold">Fecha:</label>
+            <input type="date" id="evalDate" class="text-xs font-semibold text-serenity-900 bg-slate-100 border border-slate-300 rounded-lg p-1">
+          </div>
         </div>
 
         <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5">
@@ -234,7 +242,7 @@
       </form>
     </div>
 
-    <!-- ================= VISTA GUÍA SOS (AMPLIADA Y FÁCIL DE LEER) ================= -->
+    <!-- ================= VISTA GUÍA SOS ================= -->
     <div id="view-guide" class="hidden space-y-4">
       <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-5 text-sm">
         
@@ -243,7 +251,6 @@
           <p class="text-xs text-slate-500">Recordatorio rápido para momentos de tensión en clase</p>
         </div>
 
-        <!-- Tarjetas principales -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl">
             <p class="font-bold text-amber-900 text-sm mb-1">⏱️ Regla de los 10 segundos</p>
@@ -257,7 +264,6 @@
           </div>
         </div>
 
-        <!-- Escenarios comunes -->
         <div class="space-y-3 pt-2">
           <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider">¿Qué decir ante los 4 problemas comunes?</h3>
 
@@ -282,7 +288,6 @@
           </div>
         </div>
 
-        <!-- Evitar -->
         <div class="bg-rose-50 border border-rose-200 p-3.5 rounded-xl text-rose-950">
           <p class="font-bold text-rose-900 text-xs mb-1">🚫 3 Actitudes a Evitar Siempre:</p>
           <ul class="list-disc pl-4 space-y-1 text-xs">
@@ -365,7 +370,9 @@
     let strugglesChartInstance = null;
 
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('autoDate').innerText = new Date().toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+      // Inicializar fecha de hoy por defecto
+      const todayISO = new Date().toISOString().split('T')[0];
+      document.getElementById('evalDate').value = todayISO;
       
       if (isMentorMode) {
         document.getElementById('nav-profesor').classList.add('hidden');
@@ -386,13 +393,23 @@
       if (tab === 'prof-history') renderProfHistory();
     }
 
-    function selectCard(cat, val, el) {
-      document.getElementById('val_' + cat).value = val;
-      el.parentElement.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected-green', 'selected-yellow', 'selected-red', 'selected-neutral'));
-      if (val === 'green') el.classList.add('selected-green');
-      else if (val === 'yellow') el.classList.add('selected-yellow');
-      else if (val === 'red') el.classList.add('selected-red');
-      else if (val === 'neutral') el.classList.add('selected-neutral');
+    // LÓGICA DE SELECCIÓN DE TARJETAS CORREGIDA
+    function selectCard(category, value, element) {
+      // Asignar valor al input oculto
+      document.getElementById('val_' + category).value = value;
+      
+      // Limpiar hermanos
+      const parent = element.parentElement;
+      const cards = parent.querySelectorAll('.option-card');
+      cards.forEach(c => {
+        c.classList.remove('selected-green', 'selected-yellow', 'selected-red', 'selected-neutral');
+      });
+
+      // Aplicar clase correspondiente
+      if (value === 'green') element.classList.add('selected-green');
+      else if (value === 'yellow') element.classList.add('selected-yellow');
+      else if (value === 'red') element.classList.add('selected-red');
+      else if (value === 'neutral') element.classList.add('selected-neutral');
     }
 
     function loadWeeklyTarget() {
@@ -402,13 +419,27 @@
 
     async function submitEvaluation(e) {
       e.preventDefault();
+
+      // Validar respuestas obligatorias
+      const required = ['ritmo', 'emocion', 'limites', 'desc', 'coherencia', 'aprendizaje'];
+      const missing = required.filter(id => !document.getElementById('val_' + id).value);
+
+      if (missing.length > 0) {
+        alert("Por favor, selecciona una opción en todos los semáforos antes de guardar.");
+        return;
+      }
+
       const btn = document.getElementById('btnSubmit');
       btn.disabled = true;
+      btn.innerText = "Guardando...";
+
+      const selectedDate = document.getElementById('evalDate').value;
+      const formattedDate = new Date(selectedDate + 'T00:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
 
       const record = {
         id: Date.now(),
-        date: new Date().toLocaleDateString('es-ES'),
-        isoDate: new Date().toISOString().split('T')[0],
+        date: formattedDate,
+        isoDate: selectedDate,
         ritmo: document.getElementById('val_ritmo').value,
         emocion: document.getElementById('val_emocion').value,
         limites: document.getElementById('val_limites').value,
@@ -432,13 +463,18 @@
 
       alert("¡Autoevaluación guardada correctamente!");
       btn.disabled = false;
-      location.reload();
+      btn.innerText = "Guardar Autoevaluación Diaria ✨";
+      
+      // Limpiar selecciones
+      required.forEach(id => document.getElementById('val_' + id).value = '');
+      document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected-green', 'selected-yellow', 'selected-red', 'selected-neutral'));
+      document.getElementById('val_nota').value = '';
     }
 
     function renderProfHistory() {
       const data = JSON.parse(localStorage.getItem('psq_evals') || '[]');
       const container = document.getElementById('profHistoryContainer');
-      container.innerHTML = data.length === 0 ? '<p class="text-slate-400 text-center py-4">No hay registros guardados.</p>' : data.map(item => createCard(item)).join('');
+      container.innerHTML = data.length === 0 ? '<p class="text-slate-400 text-center py-4">No hay registros guardados en este dispositivo.</p>' : data.map(item => createCard(item)).join('');
     }
 
     function renderMentorDashboard() {
